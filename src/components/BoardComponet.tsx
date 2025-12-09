@@ -11,6 +11,7 @@ interface BoardProps {
   currentPlayer: Player | null;
   swapPlayer: () => void;
 }
+
 export function BoardComponent({
   board,
   setBoard,
@@ -18,13 +19,29 @@ export function BoardComponent({
   swapPlayer,
 }: BoardProps) {
   const [selectedCell, setSelectedCell] = useState<Cell | null>(null);
+
   function click(cell: Cell) {
     if (
       selectedCell &&
-      selectedCell != cell &&
+      selectedCell !== cell &&
       selectedCell.figure?.canMove(cell)
     ) {
       selectedCell.moveFigure(cell);
+      if (currentPlayer && board.isCheckmate(currentPlayer.color)) {
+        alert("CHECKMATE");
+      }
+
+      if (currentPlayer && board.isStalemate(currentPlayer.color)) {
+        alert("STALEMATE");
+      }
+
+      if (currentPlayer && board.isKingUnderAttack(currentPlayer.color)) {
+        alert("CHECK");
+      }
+
+      // --- ВАЖНО ---
+      updateBoard(); // <--- ДОБАВЛЕНО
+
       swapPlayer();
       setSelectedCell(null);
     } else {
@@ -33,20 +50,23 @@ export function BoardComponent({
       }
     }
   }
+
   useEffect(() => {
     hightLightCells();
     updateBoard();
   }, [selectedCell]);
+
   function hightLightCells() {
     board.hightLightCells(selectedCell);
   }
+
   function updateBoard() {
     const newBoard = board.getCopyBoard();
     setBoard(newBoard);
   }
+
   return (
     <>
-      {/* Текущий игрок */}
       <h3 className="text-xl font-semibold mr-5">
         Current Player:{" "}
         <span
@@ -57,7 +77,8 @@ export function BoardComponent({
           {currentPlayer?.color}
         </span>
       </h3>
-      <div className="w-[calc(64px*8)] h-[calc(64px*8)] flex flex-wrap  border-gray-700  shadow-xl">
+
+      <div className="w-[calc(64px*8)] h-[calc(64px*8)] flex flex-wrap">
         {board.cells.map((row, index) => (
           <React.Fragment key={index}>
             {row.map((cell) => (
