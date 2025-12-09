@@ -1,0 +1,11 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+@import "tailwindcss";
+.avaible {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  background-color: green;
+}
