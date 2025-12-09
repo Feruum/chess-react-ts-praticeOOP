@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import { CellComponent } from "./CellComponent";
+import React, { useEffect, useState } from "react";
 import { Board } from "../models/board";
-import { useState } from "react";
+import CellComponent from "./CellComponent";
 import { Cell } from "../models/cell";
 import { Player } from "../models/player";
 
@@ -12,7 +11,7 @@ interface BoardProps {
   swapPlayer: () => void;
 }
 
-export function BoardComponent({
+export default function BoardComponent({
   board,
   setBoard,
   currentPlayer,
@@ -27,23 +26,9 @@ export function BoardComponent({
       selectedCell.figure?.canMove(cell)
     ) {
       selectedCell.moveFigure(cell);
-      if (currentPlayer && board.isCheckmate(currentPlayer.color)) {
-        alert("CHECKMATE");
-      }
-
-      if (currentPlayer && board.isStalemate(currentPlayer.color)) {
-        alert("STALEMATE");
-      }
-
-      if (currentPlayer && board.isKingUnderAttack(currentPlayer.color)) {
-        alert("CHECK");
-      }
-
-      // --- ВАЖНО ---
-      updateBoard(); // <--- ДОБАВЛЕНО
-
       swapPlayer();
       setSelectedCell(null);
+      updateBoard();
     } else {
       if (cell.figure?.color === currentPlayer?.color) {
         setSelectedCell(cell);
@@ -52,12 +37,12 @@ export function BoardComponent({
   }
 
   useEffect(() => {
-    hightLightCells();
-    updateBoard();
+    highlightCells();
   }, [selectedCell]);
 
-  function hightLightCells() {
-    board.hightLightCells(selectedCell);
+  function highlightCells() {
+    board.highlightCells(selectedCell);
+    updateBoard();
   }
 
   function updateBoard() {
@@ -66,9 +51,10 @@ export function BoardComponent({
   }
 
   return (
-    <>
-      <h3 className="text-xl font-semibold mr-5">
-        Current Player:{" "}
+    <div className="flex flex-col items-center gap-4">
+      {/* Текущий игрок */}
+      <h3 className="text-xl font-semibold">
+        Текущий игрок:{" "}
         <span
           className={
             currentPlayer?.color === "white" ? "text-blue-400" : "text-red-400"
@@ -78,14 +64,22 @@ export function BoardComponent({
         </span>
       </h3>
 
-      <div className="w-[calc(64px*8)] h-[calc(64px*8)] flex flex-wrap">
+      {/* Доска */}
+      <div
+        className="
+          grid grid-cols-8 
+          border-4 border-gray-700 
+          rounded-xl shadow-xl
+        "
+        style={{ width: "512px", height: "512px" }} // 64px * 8
+      >
         {board.cells.map((row, index) => (
           <React.Fragment key={index}>
             {row.map((cell) => (
               <CellComponent
+                key={cell.id}
                 click={click}
                 cell={cell}
-                key={cell.id}
                 selected={
                   cell.x === selectedCell?.x && cell.y === selectedCell?.y
                 }
@@ -94,6 +88,6 @@ export function BoardComponent({
           </React.Fragment>
         ))}
       </div>
-    </>
+    </div>
   );
 }

@@ -6,7 +6,7 @@ interface CellProps {
   click: (cell: Cell) => void;
 }
 
-export function CellComponent({ cell, selected, click }: CellProps) {
+export default function CellComponent({ cell, selected, click }: CellProps) {
   return (
     <div
       className={`w-[64px] h-[64px] flex justify-center items-center 

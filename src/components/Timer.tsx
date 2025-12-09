@@ -7,7 +7,7 @@ interface TimerProps {
   restart: () => void;
 }
 
-export function Timer({ currentPlayer, restart }: TimerProps) {
+export default function Timer({ currentPlayer, restart }: TimerProps) {
   const [blackTime, setBlackTime] = useState(300);
   const [whiteTime, setWhiteTime] = useState(300);
   const timer = useRef<null | ReturnType<typeof setInterval>>(null);

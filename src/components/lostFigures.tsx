@@ -5,9 +5,9 @@ interface LostFiguresProps {
   figures: Figure[];
 }
 
-export function LostFigures({ title, figures }: LostFiguresProps) {
+export default function LostFigures({ title, figures }: LostFiguresProps) {
   return (
-    <div className="p-4 w-48 ml-6 rounded-xl bg-gray-800/80 shadow-lg text-white backdrop-blur">
+    <div className="p-4 w-48 ml-10 rounded-xl bg-gray-800/80 shadow-lg text-white backdrop-blur">
       <h3 className="font-semibold text-lg mb-3 text-center border-b border-gray-600 pb-2">
         {title}
       </h3>
