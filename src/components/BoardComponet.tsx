@@ -21,22 +21,10 @@ export function BoardComponent({
   function click(cell: Cell) {
     if (
       selectedCell &&
-      selectedCell !== cell &&
+      selectedCell != cell &&
       selectedCell.figure?.canMove(cell)
     ) {
       selectedCell.moveFigure(cell);
-
-      // 👉 Проверка шах/мат сразу после хода
-      board.checkGameState(currentPlayer!.color);
-
-      updateBoard();
-
-      // 👉 Если игра закончена — дальше ходить нельзя
-      if (board.isGameOver) {
-        alert(`Game Over! Winner: ${board.winner}`);
-        return;
-      }
-
       swapPlayer();
       setSelectedCell(null);
     } else {
@@ -50,7 +38,7 @@ export function BoardComponent({
     updateBoard();
   }, [selectedCell]);
   function hightLightCells() {
-    board.highlightCells(selectedCell);
+    board.hightLightCells(selectedCell);
   }
   function updateBoard() {
     const newBoard = board.getCopyBoard();
